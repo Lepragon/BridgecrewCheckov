@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: from-yaml
+  namespace: berk
+data:
+  yaml: test
+  deneme: abc
+  string: test124
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: from-file
+data:
+  deneme.yaml: |
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: from-yaml
+      namespace: berk
+    data:
+      yaml: test
+  mucahid.yaml: |
+    abc: dasdad
+    asdsad: asdasd

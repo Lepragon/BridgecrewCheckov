@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-express
+  namespace: berk
+  labels:
+    database: virtual
+spec:
+  selector:
+    matchLabels:
+      ui: mongo-express
+  template:
+    metadata:
+      labels:
+        ui: mongo-express
+    spec:
+      containers:
+      - name: mongo-express
+        image: harbor.dgpays.local/docker.io/library/mongo-express:latest
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "250m"
+        env:
+          - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mongo-secret
+                key: mongo-root-username
+          - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mongo-secret
+                key: mongo-root-password
+          - name: ME_CONFIG_MONGODB_SERVER
+            valueFrom:
+              configMapKeyRef:
+                key: mongo-db-url
+                name: mongo-host-config
+        ports:
+        - containerPort: 8081

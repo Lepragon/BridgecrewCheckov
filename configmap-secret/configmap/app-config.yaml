@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: configmap-dev
+  namespace: berk
+  labels:
+    dgpays: learning
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      dgpays: learning
+  template:
+    metadata:
+      labels:
+        dgpays: learning
+    spec:
+      containers:
+      - name: configmap-dev
+        image: harbor.dgpays.local/docker.io/library/nginx:alpine
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        envFrom:
+        - configMapRef:
+            name: from-yaml
+        volumeMounts:
+          - name: configmap-file
+            mountPath: /tmp/berk
+            readOnly: true
+        env:
+          - name: DGPAYS
+            valueFrom:
+              configMapKeyRef:
+                key: berk
+                name: my-config
+          - name: BERK
+            value: Turkgenc
+      volumes:
+        - name: configmap-file
+          configMap:
+              name: from-file
+            

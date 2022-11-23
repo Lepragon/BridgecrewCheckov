@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  namespace: berk
+  labels:
+    db: mongo
+    data: backup
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      db: mongo
+  template:
+    metadata:
+      labels:
+        db: mongo
+    spec:
+      containers:
+      - name: mongodb
+        image: harbor.dgpays.local/docker.io/library/mongo:5.0.14
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "250m"
+        env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mongo-secret
+                key: mongo-root-username
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mongo-secret
+                key: mongo-root-password
+        ports:
+        - containerPort: 27017

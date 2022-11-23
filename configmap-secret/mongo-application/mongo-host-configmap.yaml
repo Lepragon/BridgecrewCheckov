@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-host-config
+  namespace: berk
+data:
+  mongo-db-url: mongo-svc.berk
